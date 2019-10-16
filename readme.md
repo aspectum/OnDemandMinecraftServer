@@ -1,3 +1,29 @@
+# Modifications from the original repo
+
+1. Using heroku's config vars instead of storing stuff plain text
+2. improved autoshutdown
+3. improved logging
+
+# Old README below
+I'm going to update instructions after I get everything the way I want.
+Maybe make a script do all this
+
+1. Fill config sh with aws stuff
+2. <code> heroku create mcservername </code>
+3. <code> source config.sh </code>
+4. <code> rm config.sh </code>
+5. pip install -r requirements.txt
+6. python utilityScripts/createInstance.py --- maybe python3?
+7. heroku config:set INSTANCE_ID='i-yourInstanceIdHere' --- so instance id has to be set now
+
+# Heroku stuff
+
+# Download papermc, rename it to paper.jar and put it inside instance_files/mcserver
+# Execute paper.jar let it generate all files
+# Close the server
+# Config the files the way you want
+
+
 # On Demand Minecraft Server
 Using a Python Flask application and AWS, this repository launches an AWS EC2 Instance to host a Minecraft server upon request from users through the web application. The server will automatically shut down after the server has crashed or is empty for 15 minutes. This makes server hosting for small communities very inexpensive. For up to 20 players you can expect $0.02 per hour the server runs. The largest benefit of this system is that the server bill diminishes if your community decides to take a break from the game, and will be ready to pick back up when you want to play again. No subscriptions are required.
 
