@@ -9,11 +9,14 @@ client = boto3.resource(
             region_name=os.environ['EC2_REGION']
         )
 response = client.create_instances(ImageId = os.environ['EC2_AMIS'],
-    InstanceType = os.environ['EC2_INSTANCETYPE'], 
-    KeyName = os.environ['EC2_KEYPAIR'],
-    MaxCount = 1,
-    MinCount = 1,
-    SecurityGroups = os.environ['EC2_SECGROUPS']) # maybe needs to be a list
+            InstanceType = os.environ['EC2_INSTANCETYPE'], 
+            KeyName = os.environ['EC2_KEYPAIR'],
+            MaxCount = 1,
+            MinCount = 1,
+            SecurityGroups = [ os.environ['EC2_SECGROUPS'] ]
+        )
 
 print("INSTANCE CREATED")
 print("INSTANCE ID: " + response[0].id)
+
+os.system('heroku config:set INSTANCE_ID=' + response[0].id)
