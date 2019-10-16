@@ -1,19 +1,18 @@
-from flask import Flask, render_template, request, jsonify
-from flask_cors import CORS, cross_origin
+from flask import Flask, render_template, request
+from flask_cors import CORS
 from multiprocessing import Process
-import json
 import boto3
 import time
 import paramiko
 import os
+import io
 
 app = Flask(__name__)
 CORS(app)
 
-#Paraminko ssh information
-dirname = os.path.dirname(__file__)
-filename = os.path.join(dirname, os.environ['SSH_KEY_FILE_PATH'])
-key = paramiko.RSAKey.from_private_key_file(filename)
+#Paramiko ssh information
+pseudofile = io.StringIO(os.environ['SSH_KEY'])
+key = paramiko.RSAKey.from_private_key(pseudofile)
 sshClient = paramiko.SSHClient()
 sshClient.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
@@ -46,7 +45,7 @@ def initServerCommands(instanceIp):
         sshClient.connect(hostname=instanceIp, username="ubuntu", pkey=key)
 
         # Execute a command(cmd) after connecting/ssh to an instance
-        stdin, stdout, stderr = sshClient.exec_command("screen -dmS minecraft bash -c 'sudo java " + os.environ['JAVA_FLAGS'] + " -jar server.jar nogui'")
+        stdin, stdout, stderr = sshClient.exec_command("screen -dmS minecraft bash -c 'sudo java " + os.environ['JAVA_FLAGS'] + " -jar mcserver/paper.jar nogui'")
         print("COMMAND EXECUTED")
         # close the client connection once the job is done
         sshClient.close()
@@ -74,6 +73,7 @@ def initServerMC():
             aws_secret_access_key=os.environ['SECRET_KEY'],
             region_name=os.environ['EC2_REGION']
         )
+
         message = manageServer(client)
     
     print(message)
